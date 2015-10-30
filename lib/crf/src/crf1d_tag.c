@@ -458,18 +458,15 @@ static int model_dump(crfsuite_model_t* model, FILE *fpo)
     return 0;
 }
 
-static int crf1m_model_create(const char *filename, crfsuite_model_t** ptr_model)
+static int crf1m_model_create(crf1dm_t *crf1dm, void** ptr_model)
 {
     int ret = 0;
-    crf1dm_t *crf1dm = NULL;
     crfsuite_model_t *model = NULL;
     model_internal_t *internal = NULL;
     crfsuite_dictionary_t *attrs = NULL, *labels = NULL;
 
     *ptr_model = NULL;
 
-    /* Open the model file. */
-    crf1dm = crf1dm_new(filename);
     if (crf1dm == NULL) {
         ret = CRFSUITEERR_INCOMPATIBLE;
         goto error_exit;
@@ -550,5 +547,10 @@ error_exit:
 
 int crf1m_create_instance_from_file(const char *filename, void **ptr)
 {
-    return crf1m_model_create(filename, (crfsuite_model_t**)ptr);
+    return crf1m_model_create(crf1dm_new(filename), ptr);
+}
+
+int crf1m_create_instance_from_memory(const void *data, size_t size, void **ptr)
+{
+    return crf1m_model_create(crf1dm_new_from_memory(data, size), ptr);
 }
