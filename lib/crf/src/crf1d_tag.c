@@ -182,13 +182,10 @@ static int tagger_addref(crfsuite_tagger_t* tagger)
 
 static int tagger_release(crfsuite_tagger_t* tagger)
 {
-    int count = crfsuite_interlocked_decrement(&tagger->nref);
-    if (count == 0) {
-        /* This instance is being destroyed. */
-        crf1dt_delete((crf1dt_t*)tagger->internal);
-        free(tagger);
-    }
-    return count;
+    /* This instance is being destroyed. */
+    crf1dt_delete((crf1dt_t*)tagger->internal);
+    free(tagger);
+    return 0;
 }
 
 static int tagger_set(crfsuite_tagger_t* tagger, crfsuite_instance_t *inst)
